@@ -30,18 +30,39 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 helpMessage ="""
+Suicide Squad Bot Menu
 
 For Public
 
 [•]Adminlist
-[•]Ownerlist
 [•]Info Group
 [•]Welcome
-[•]Creator
+[•]Owner
 [•]Bot
 
 For Admin
--==================-
+
+[•]Clear
+[•]Cek ban
+[•]Ban
+[•]Unban
+[•]LG (List Group)
+[•]mid @
+[•]Banned @
+[•]Nk @
+[•]Kill
+[•]Like temen
+[•]Bot Like
+[•]Voice (TextToSpeaks)
+[•]Message add:
+[•]Message change:
+[•]Spam:
+[•]Myname:
+[•]Allbio:
+[•]Bot add @
+[•]Admin add @
+[•]Suicide Squad
+[•]Suicide Squad Member
 [•]Cancel
 [•]「Buka/Tutup」qr
 [•]Mid Bot
@@ -54,7 +75,13 @@ For Admin
 [•]Absen/Respon
 [•]Banlist
 
-Street Punk
+
+=============
+Suicide Squad
+Owner : Riki
+Https://line.me/ti/p/~deadscreamer
+
+
 """
 KAC=[cl,ki,kk,kc,ks]
 #DEF1=[ki,kk,kc,ks,ka,kb,ko,ke,ku] Udah Ga Kepake(Boleh di apus)
@@ -91,11 +118,11 @@ wait = {
     "wblack":False,
     "dblack":False,
     "clock":False,
-    "cName":"Punkers1 ",
-    "cName2":"Punkers2 ",
-    "cName3":"Punkers3 ",
-    "cName4":"Punkers4 ",
-    "cName5":"Punkers5 ",
+    "cName":" ",
+    "cName2":" ",
+    "cName3":" ",
+    "cName4":" ",
+    "cName5":" ",
     "blacklist":{},
     "wblacklist":False,
     "dblacklist":False,
@@ -519,6 +546,21 @@ def bot(op):
                   cl.sendText(msg.to,mc)
                   print "[Command]Stafflist executed"
     #--------------------------------------
+    #---------------Voice----------------------
+            elif "Voice " in msg.text:
+                say = msg.text.replace("Voice ","")
+                lang = 'id'
+                tts = gTTS(text=Voice, lang=lang)
+                tts.save("hasil.mp3")
+                cl.sendAudio(msg.to,"hasil.mp3")
+   
+    #---Sc jika ada orang yg tag kita langsung di respon bot---
+            elif "@Riki " in msg.text:
+                tanya = msg.text.replace("@Riki ","")
+                jawab = ("Jgn Tag Si Riki...","Berisik jgn tag si Riki...,","Sekali lagi nge tag gw sumpahin jomblo seumur hidup")
+                jawaban = random.choice(jawab)
+                cl.sendText(msg.to,jawaban)
+
     #-------------- Add Friends ------------
             elif "Bot Add @" in msg.text:
               if msg.toType == 2:
@@ -1225,7 +1267,7 @@ def bot(op):
                 if wait["autoAdd"] == True: md+="[•]Auto Add [On]\n"
                 else:md+="[•]Auto Add [Off]\n"
                 if wait["commentOn"] == True: md+="[•]Comment [On]\n"
-                else:md+="[•]Comment [Off]\n*============*\nStreetPunk\n*============*"
+                else:md+="[•]Comment [Off]\n*============*\nSuicideSquad\n*============*"
                 cl.sendText(msg.to,md)
             elif "album merit " in msg.text:
                 gid = msg.text.replace("album merit ","")
@@ -1544,7 +1586,7 @@ def bot(op):
 
 #-----------------------------------------------
          #----------------Fungsi Join Group Start-----------------------#
-            elif msg.text in ["Kuy","Sini","Join kuy"]: #Panggil Semua Bot
+            elif msg.text in ["Suicide Squad","Kuy","Sini","Join kuy"]: #Panggil Semua Bot
               if msg.from_ in owner:
                 G = cl.getGroup(msg.to)
                 ginfo = cl.getGroup(msg.to)
