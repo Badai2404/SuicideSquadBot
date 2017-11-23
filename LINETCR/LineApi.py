@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 from Api import Poll, Talk, channel
 from lib.curve.ttypes import *
+Import requests
+import shutil
+import json
+import subprocess
+from random import randint
+from gtts import gTTS
+from bs4 import BeautifulSoup
 
 def def_callback(str):
     print(str)
@@ -94,6 +101,15 @@ class LINE:
 
   """Message"""
 
+  def kedapkedip(self, tomid, text):
+        M = Message()
+        M.to = tomid
+        t1 = "\xf4\x80\xb0\x82\xf4\x80\xb0\x82\xf4\x80\xb0\x82\xf4\x80\xb0\x82"
+        t2 = "\xf4\x80\x82\xb3\xf4\x8f\xbf\xbf"
+        rst = t1 + text + t2
+        M.text = rst.replace("\n", " ")
+        return self.Talk.client.sendMessage(0, M)
+    
   def sendMessage(self, messageObject):
         return self.Talk.client.sendMessage(0,messageObject)
 
@@ -101,6 +117,124 @@ class LINE:
         msg = Message()
         msg.to = Tomid
         msg.text = text
+        
+   def sendImage(self, to_, path):
+        M = Message(to=to_, text=None, contentType = 1)
+        M.contentMetadata = None
+        M.contentPreview = None
+        M_id = self.Talk.client.sendMessage(0,M).id
+        files = {
+            'file': open(path, 'rb'),
+        }
+        params = {
+            'name': 'media',
+            'oid': M_id,
+            'size': len(open(path, 'rb').read()),
+            'type': 'image',
+            'ver': '1.0',
+        }
+        data = {
+            'params': json.dumps(params)
+        }
+        r = self.post_content('https://os.line.naver.jp/talk/m/upload.nhn', data=data, files=files)
+        print r
+        if r.status_code != 201:
+            raise Exception('Upload image failure.')
+        return True
+
+  def sendImageWithURL(self, to_, url):
+        """Send a image with given image url
+        :param url: image url to send
+        """
+        path = 'pythonLine.data'
+        r = requests.get(url, stream=True)
+        if r.status_code == 200:
+            with open(path, 'w') as f:
+                shutil.copyfileobj(r.raw, f)
+        else:
+            raise Exception('Download image failure.')
+        try:
+            self.sendImage(to_, path)
+        except Exception as e:
+            raise e
+
+  def sendAudioWithURL(self, to_, url):
+        path = 'pythonLiness.data'
+        r = requests.get(url, stream=True)
+        if r.status_code == 200:
+            with open(path, 'w') as f:
+                shutil.copyfileobj(r.raw, f)
+        else:
+            raise Exception('Download Audio failure.')
+        try:
+            self.sendAudio(to_, path)
+        except Exception as e:
+            raise e
+
+  def sendAudio(self, to_, path):
+        M = Message(to=to_,contentType = 3)
+        M.contentMetadata = None
+        M.contentPreview = None
+        M_id = self.Talk.client.sendMessage(0,M).id
+        files = {
+            'file': open(path, 'rb'),
+        }
+        params = {
+            'name': 'media',
+            'oid': M_id,
+            'size': len(open(path, 'rb').read()),
+            'type': 'audio',
+            'ver': '1.0',
+        }
+        data = {
+            'params': json.dumps(params)
+        }
+        r = self.post_content('https://os.line.naver.jp/talk/m/upload.nhn', data=data, files=files)
+        if r.status_code != 201:
+            raise Exception('Upload image failure.')
+        return True
+
+  def sendVideo(self, to_, path):
+        M = Message(to=to_,contentType = 2)
+        M.contentMetadata = {
+              'VIDLEN' : '0',
+              'DURATION' : '0'
+        }
+        M.contentPreview = None
+        M_id = self.Talk.client.sendMessage(0,M).id
+        files = {
+            'file': open(path, 'rb'),
+        }
+        params = {
+            'name': 'media',
+            'oid': M_id,
+            'size': len(open(path, 'rb').read()),
+            'type': 'video',
+            'ver': '1.0',
+        }
+        data = {
+            'params': json.dumps(params)
+        }
+        r = self.post_content('https://os.line.naver.jp/talk/m/upload.nhn', data=data, files=files)
+        if r.status_code != 201:
+            raise Exception('Upload image failure.')
+        return True
+
+  def sendVideoWithURL(self, to_, url):
+        path = 'pythonLines.data'
+        r = requests.get(url, stream=True)
+        if r.status_code == 200:
+            with open(path, 'w') as f:
+               shutil.copyfileobj(r.raw, f)
+        else:
+            raise Exception('Download Audio failure.')
+        try:
+            self.sendVideo(to_, path)
+        except Exception as e:
+            raise e
+
+  def removeAllMessages(self, lastMessageId):
+	return self.Talk.client.removeAllMessages(0, lastMessageId)
 
         return self.Talk.client.sendMessage(0, msg)
   def sendImage(self, to_, path):
@@ -323,7 +457,7 @@ class LINE:
 
       prof = self.getProfile()
 
-      print("One Piece BOT")
+      print("Suicide Squad Bot")
       print("mid -> " + prof.mid)
       print("name -> " + prof.displayName)
       print("authToken -> " + self.authToken)
